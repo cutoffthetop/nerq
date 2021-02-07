@@ -1,5 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {CategoryModel} from './modules/category.model';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -8,19 +7,10 @@ import {CategoryModel} from './modules/category.model';
 })
 export class AppComponent implements OnInit {
   title = 'nerq';
-  @Input() categories: CategoryModel[];
 
   constructor() {
-    this.categories = [];
   }
 
   ngOnInit(): void {
-    this.categories = [
-      new CategoryModel('category 1'),
-      new CategoryModel('category 2'),
-      new CategoryModel('category 3'),
-      new CategoryModel('category 4'),
-      new CategoryModel('category 5')
-    ];
   }
 }

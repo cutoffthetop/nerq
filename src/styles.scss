@@ -13,6 +13,7 @@ $nerq-theme: mat-light-theme((
   )
 ));
 @include angular-material-theme($nerq-theme);
+
 html, body {
   height: 100%;
 }
@@ -20,6 +21,5 @@ html, body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  background: rgb(255, 160, 0);
-  background: linear-gradient(0deg, rgba(255, 160, 0, 1) 66%, rgba(255, 193, 7, 1) 100%);
+  background-color: rgb(173,188,173);
 }

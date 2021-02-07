@@ -1,0 +1,25 @@
+.mat-grid-list {
+  background-color: rgb(173, 188, 173);
+  margin: 10px 30px;
+}
+
+.board-grid {
+  background-color: rgb(173, 188, 173);
+}
+
+.board-header {
+  font-size: x-large;
+  background-color: rgb(67, 86, 55);
+  color: rgb(173, 188, 173);
+}
+
+.board-tile {
+  background-color: rgb(250, 212, 149);
+  color: rgb(67, 86, 55);
+  font-size: xxx-large;
+}
+
+.board-tile.disabled {
+  color: rgb(250, 212, 149);
+  background-color: rgb(173, 188, 173);
+}

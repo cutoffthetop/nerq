@@ -1,0 +1,19 @@
+<mat-grid-list
+  [cols]="categories.length"
+  [rowHeight]="100 / (1.2 + maxQuestions()) + '%'"
+  class="board-grid">
+  <mat-grid-tile
+    *ngFor="let category of categories"
+    class="board-header"
+    colspan="1"
+    rowspan="1">
+    {{category.title}}
+  </mat-grid-tile>
+  <mat-grid-tile
+    *ngFor="let question of questions()"
+    class="board-tile"
+    colspan="1"
+    rowspan="1">
+    {{question.weight}}
+  </mat-grid-tile>
+</mat-grid-list>
