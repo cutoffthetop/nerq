@@ -1,25 +1,83 @@
-<mat-tab-group>
-  <mat-tab
-    *ngFor="let round of rounds"
-    [label]="round.title">
-    <mat-grid-list
-      [cols]="round.categories.length"
-      class="board-grid"
-      rowHeight="500px">
-      <mat-grid-tile
-        *ngFor="let category of round.categories"
-        colspan="1"
-        rowspan="1">
-        <form class="editor-form">
-          <mat-form-field>
-            <input [value]="category.title" label="category" matInput>
-          </mat-form-field>
-          <mat-form-field *ngFor="let question of category.questions">
-            <mat-label>{{question.weight}}</mat-label>
-            <input [value]="question.title" label="question" matInput>
-          </mat-form-field>
-        </form>
-      </mat-grid-tile>
-    </mat-grid-list>
-  </mat-tab>
-</mat-tab-group>
+<div class="host-wrapper">
+  <mat-tab-group
+    (selectedTabChange)="changeRoundTab($event)"
+    class="host-tabs">
+    <mat-tab
+      *ngFor="let round of getGame().rounds"
+      [label]="round.title">
+      <mat-grid-list
+        [cols]="round.categories.length + 1"
+        class="board-grid"
+        rowHeight="480px">
+        <mat-grid-tile
+          colspan="1"
+          rowspan="1">
+          <form class="editor-form">
+            <mat-form-field>
+              <input disabled label="category" matInput value="save game">
+            </mat-form-field>
+            <button
+              (click)="saveGame()"
+              mat-icon-button>
+              <mat-icon>play_circle</mat-icon>
+            </button>
+            <mat-form-field
+              *ngFor="let tier of round.tiers">
+              <mat-label>tier {{tier.tier}}</mat-label>
+              <input [(ngModel)]="tier.points" [ngModelOptions]="{standalone: true}" label="weight" matInput>
+            </mat-form-field>
+          </form>
+        </mat-grid-tile>
+        <mat-grid-tile
+          *ngFor="let category of round.categories"
+          colspan="1"
+          rowspan="1">
+          <form class="editor-form">
+            <mat-form-field>
+              <input [(ngModel)]="category.title" [ngModelOptions]="{standalone: true}" label="category" matInput>
+            </mat-form-field>
+            <ng-container
+              *ngFor="let question of category.questions">
+              <mat-form-field>
+                <mat-label>{{getWeightForQuestion(question)}}</mat-label>
+                <input [(ngModel)]="question.title" [ngModelOptions]="{standalone: true}" label="question" matInput>
+              </mat-form-field>
+              <button
+                (click)="playQuestion(question)"
+                mat-icon-button>
+                <mat-icon [innerText]="question.stateIcon()">block</mat-icon>
+              </button>
+            </ng-container>
+          </form>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </mat-tab>
+  </mat-tab-group>
+
+  <hr>
+
+  <div
+    *ngFor="let player of getGame().players"
+    class="host-players">
+    <mat-form-field>
+      <mat-label>name</mat-label>
+      <input [(ngModel)]="player.name" [ngModelOptions]="{standalone: true}" label="name" matInput>
+    </mat-form-field>
+    <mat-form-field
+      class="player-points">
+      <mat-label>points</mat-label>
+      <input [(ngModel)]="player.points" [ngModelOptions]="{standalone: true}" label="points" matInput>
+    </mat-form-field>
+  </div>
+
+  <hr>
+
+  <div
+    *ngIf="getCurrentQuestion() as question"
+    class="current-question">
+    <mat-form-field appearance="fill">
+      <mat-label>{{question.state}}</mat-label>
+      <textarea [(ngModel)]="question.title" matInput rows="3"></textarea>
+    </mat-form-field>
+  </div>
+</div>

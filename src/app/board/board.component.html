@@ -1,19 +1,45 @@
 <mat-grid-list
-  [cols]="categories.length"
-  [rowHeight]="100 / (1.2 + maxQuestions()) + '%'"
+  [cols]="getCurrentRound().categories.length"
+  [rowHeight]="100 / (2 + getCurrentRound().maxQuestions()) + '%'"
   class="board-grid">
   <mat-grid-tile
-    *ngFor="let category of categories"
+    *ngFor="let category of getCurrentRound().categories"
     class="board-header"
     colspan="1"
     rowspan="1">
     {{category.title}}
   </mat-grid-tile>
   <mat-grid-tile
-    *ngFor="let question of questions()"
-    class="board-tile"
+    *ngFor="let question of getCurrentRound().questionsInOrder()"
+    [class]="'board-tile board-tile-' + question.stateString()"
     colspan="1"
     rowspan="1">
-    {{question.weight}}
+    {{getCurrentRound().getPointsForTier(question.tier)}}
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="getCurrentRound().categories.length"
+    rowspan="1">
+    <mat-chip-list>
+      <mat-chip
+        *ngFor="let player of getPlayers()"
+        class="player-chip">
+        {{player.name}}: {{player.points}}
+      </mat-chip>
+    </mat-chip-list>
   </mat-grid-tile>
 </mat-grid-list>
+
+<div
+  *ngIf="getCurrentMedia() as media"
+  class="popup-stage">
+  <div class="popup-card">
+    <img
+      *ngIf="media.type === 'image'"
+      [src]="media.url">
+    <video
+      *ngIf="media.type === 'video'"
+      autoplay controls>
+      <source [src]="media.url" type="video/mp4">
+    </video>
+  </div>
+</div>

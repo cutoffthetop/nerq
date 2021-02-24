@@ -1,7 +1,10 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {QuestionModel} from '../modules/question.model';
 import {RoundModel} from '../modules/round.model';
+import {MatTabChangeEvent} from '@angular/material/tabs';
+import {GameModel} from '../modules/game.model';
+import {QuestionState} from '../modules/question.state.enum';
 
 @Component({
   selector: 'app-host',
@@ -10,36 +13,67 @@ import {RoundModel} from '../modules/round.model';
 })
 export class HostComponent implements OnInit {
 
-  @Input() rounds: RoundModel[];
+  private game?: GameModel;
 
   constructor(
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
-    this.rounds = [];
   }
 
   ngOnInit(): void {
-    this.rounds = [
-      new RoundModel('main question round'),
-      new RoundModel('quick fire round')
-    ];
   }
 
-  currentRound(): RoundModel {
-    return this.rounds[0];
+  getGame(): GameModel {
+    if (this.game === undefined) {
+      this.game = GameModel.load();
+    }
+    return this.game;
   }
 
-  maxQuestions(): number {
-    return this.currentRound().categories
-      .map(category => category.questions.length)
-      .reduce((a, b) => Math.max(a, b));
+  saveGame(): void {
+    this.game = this.getGame().save();
   }
 
-  questions(): QuestionModel[] {
-    const categoryIndex = (question: QuestionModel) => this.currentRound().categories.indexOf(question.category);
-    return this.currentRound().categories
-      .map(category => category.questions)
-      .reduce((a, b) => a.concat(b))
-      .sort((a, b) => a.weight - b.weight || categoryIndex(a) - categoryIndex(b));
+  getCurrentRound(): RoundModel {
+    return this.getGame().getCurrentRound();
+  }
+
+  getCurrentQuestion(): QuestionModel | undefined {
+    return this.getGame().getCurrentQuestion();
+  }
+
+  changeRoundTab(event: MatTabChangeEvent): void {
+    if (this.game !== undefined) {
+      if (this.game.currentRoundIndex !== event.index) {
+        this.game.currentRoundIndex = event.index;
+        this.game.save();
+      }
+    }
+  }
+
+  getWeightForQuestion(question: QuestionModel): number {
+    return this.getCurrentRound().tiers.filter(
+      tier => tier.tier === question.tier
+    )[0].points;
+  }
+
+  playQuestion(question: QuestionModel): void {
+    if (this.game !== undefined) {
+      switch (question.state) {
+        case QuestionState.open:
+          question.state = QuestionState.questioning;
+          break;
+        case QuestionState.questioning:
+          question.state = QuestionState.answering;
+          break;
+        case QuestionState.answering:
+          question.state = QuestionState.done;
+          break;
+        case QuestionState.done:
+          question.state = QuestionState.open;
+          break;
+      }
+      this.game.save();
+    }
   }
 }

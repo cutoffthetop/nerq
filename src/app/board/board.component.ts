@@ -1,7 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {CategoryModel} from '../modules/category.model';
-import {QuestionModel} from '../modules/question.model';
+import {Component, Input, NgZone, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import {RoundModel} from '../modules/round.model';
+import {delay} from 'rxjs/operators';
+import {GameModel} from '../modules/game.model';
+import {PlayerModel} from '../modules/player.model';
+import {fromEvent, Observable} from 'rxjs';
+import {MediaModel} from '../modules/media.model';
 
 @Component({
   selector: 'app-board',
@@ -9,36 +13,39 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./board.component.scss']
 })
 export class BoardComponent implements OnInit {
-  @Input() categories: CategoryModel[];
+
+  // @ts-ignore
+  source$: Observable<Event>;
+  @Input()
+  private game: GameModel;
 
   constructor(
     private route: ActivatedRoute,
+    public zone: NgZone
   ) {
-    this.categories = [];
+    // @ts-ignore
+    this.game = undefined;
   }
 
   ngOnInit(): void {
-    this.categories = [
-      new CategoryModel('who is james dean?'),
-      new CategoryModel('category 2'),
-      new CategoryModel('category 3'),
-      new CategoryModel('category 4'),
-      new CategoryModel('category 5'),
-      new CategoryModel('category 6')
-    ];
+    this.source$ = fromEvent(window, 'storage');
+    this.source$.pipe(delay(100)).subscribe(
+      () => {
+        this.zone.run(() => this.game = GameModel.load());
+      }
+    );
+    this.zone.run(() => this.game = GameModel.load());
   }
 
-  maxQuestions(): number {
-    return this.categories
-      .map(category => category.questions.length)
-      .reduce((a, b) => Math.max(a, b));
+  getCurrentRound(): RoundModel {
+    return this.game.getCurrentRound();
   }
 
-  questions(): QuestionModel[] {
-    const categoryIndex = (question: QuestionModel) => this.categories.indexOf(question.category);
-    return this.categories
-      .map(category => category.questions)
-      .reduce((a, b) => a.concat(b))
-      .sort((a, b) => a.weight - b.weight || categoryIndex(a) - categoryIndex(b));
+  getCurrentMedia(): MediaModel | undefined {
+    return this.game.getCurrentMedia();
+  }
+
+  getPlayers(): PlayerModel[] {
+    return this.game.players;
   }
 }

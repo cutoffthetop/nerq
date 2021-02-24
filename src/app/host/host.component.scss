@@ -1,0 +1,25 @@
+.host-wrapper {
+  background-color: whitesmoke;
+  height: 100%;
+  width: 100%;
+  margin-top: -5px;
+  padding-top: 5px;
+}
+
+.host-tabs, .host-players, .current-question {
+  color: black;
+  margin: 5px;
+}
+
+.host-players {
+  display: inline-block;
+}
+
+.current-question > .mat-form-field {
+  width: 100%;
+}
+
+.player-points {
+  width: 60px;
+  margin: 0 5px;
+}
