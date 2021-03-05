@@ -21,11 +21,11 @@ export class RoundModel {
       new CategoryModel('category 6')
     ];
     this.tiers = [
-      new TierModel(1),
-      new TierModel(2),
-      new TierModel(3),
-      new TierModel(4),
-      new TierModel(5)
+      new TierModel(1, 100),
+      new TierModel(2, 200),
+      new TierModel(3, 400),
+      new TierModel(4, 600),
+      new TierModel(5, 1000)
     ];
   }
 

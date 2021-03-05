@@ -5,10 +5,10 @@ export class QuestionModel {
   tier: number;
   state: QuestionState;
 
-  constructor(tier: number, title: string, state?: QuestionState) {
-    this.title = title;
+  constructor(tier: number) {
     this.tier = tier;
-    this.state = state || QuestionState.open;
+    this.title = '';
+    this.state = QuestionState.open;
   }
 
   stateString(): string {
@@ -30,12 +30,9 @@ export class QuestionModel {
 
   getMedia(): string | undefined {
     const urls = this.title
+      .replace(/\n/g, ' ')
       .split(/[ ,]+/)
       .filter(token => token.startsWith('http') || token.startsWith('/'));
-    urls.push(
-      '/assets/spinner.gif',
-      '/assets/spinner.gif'
-    );
     if (this.state === QuestionState.questioning) {
       return urls[0];
     } else if (this.state === QuestionState.answering) {

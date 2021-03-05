@@ -15,6 +15,10 @@
   display: inline-block;
 }
 
+.done-counter {
+  width: 100px;
+}
+
 .current-question > .mat-form-field {
   width: 100%;
 }
@@ -22,4 +26,12 @@
 .player-points {
   width: 60px;
   margin: 0 5px;
+}
+
+.sound-bar {
+  color: black;
+  display: inline-block;
+  width: 320px;
+  background-color: rgba(0, 0, 0, 0.04);
+  margin: 5px;
 }

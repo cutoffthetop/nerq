@@ -16,8 +16,7 @@ export class GameModel {
   public constructor(index: number = 0, rounds?: RoundModel[]) {
     this.currentRoundIndex = index;
     this.rounds = rounds || [
-      new RoundModel('main round'),
-      new RoundModel('quick fire')
+      new RoundModel('main round')
     ];
     this.players = [
       new PlayerModel('team 1'),
@@ -25,8 +24,7 @@ export class GameModel {
       new PlayerModel('team 3'),
       new PlayerModel('team 4'),
       new PlayerModel('team 5'),
-      new PlayerModel('team 6'),
-      new PlayerModel('team 7')
+      new PlayerModel('team 6')
     ];
   }
 
@@ -63,9 +61,9 @@ export class GameModel {
       const media = currentQuestion.getMedia();
       if (media !== undefined) {
         if (media.endsWith('mp4')) {
-          return new MediaModel(media, 'video');
+          return new MediaModel('/assets' + media, 'video');
         }
-        return new MediaModel(media, 'image');
+        return new MediaModel('/assets' + media, 'image');
       }
     }
     return undefined;

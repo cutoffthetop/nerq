@@ -29,9 +29,24 @@
 }
 
 .player-chip {
-  font-size: medium;
+  font-size: large;
   background-color: #EA213E;
   color: #F9F9F9;
+  border-radius: 20px;
+  padding: 20px 3px 20px 0;
+}
+
+.player-avatar {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+  background-size: cover;
+}
+
+.player-title {
+  padding: 0 5px;
 }
 
 .popup-stage {
@@ -41,7 +56,7 @@
 }
 
 .popup-card {
-  margin: 6% 24%;
+  margin: 8% 16%;
 }
 
 .popup-card img, .popup-card video {

@@ -23,7 +23,15 @@
       <mat-chip
         *ngFor="let player of getPlayers()"
         class="player-chip">
-        {{player.name}}: {{player.points}}
+        <div
+          *ngIf="getCurrentRoundIndex() > 0"
+          [style]="'background-image: url(\'/assets/player-' + (getPlayers().indexOf(player) + 1).toString() + '.jpg\')'"
+          class="player-avatar">
+        </div>
+        <span
+          class="player-title">
+          {{player.name}}: {{player.points}}
+        </span>
       </mat-chip>
     </mat-chip-list>
   </mat-grid-tile>
@@ -32,14 +40,16 @@
 <div
   *ngIf="getCurrentMedia() as media"
   class="popup-stage">
-  <div class="popup-card">
+  <div
+    class="popup-card">
     <img
       *ngIf="media.type === 'image'"
       [src]="media.url">
     <video
       *ngIf="media.type === 'video'"
-      autoplay controls>
-      <source [src]="media.url" type="video/mp4">
+      autoplay>
+      <source
+        [src]="media.url" type="video/mp4">
     </video>
   </div>
 </div>

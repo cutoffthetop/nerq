@@ -12,19 +12,39 @@
         <mat-grid-tile
           colspan="1"
           rowspan="1">
-          <form class="editor-form">
-            <mat-form-field>
-              <input disabled label="category" matInput value="save game">
+          <form
+            class="editor-form">
+            <mat-form-field
+              class="done-counter">
+              <input
+                [value]="'done: ' + doneQuestionsCount()"
+                disabled
+                label="category"
+                matInput>
             </mat-form-field>
             <button
               (click)="saveGame()"
               mat-icon-button>
-              <mat-icon>play_circle</mat-icon>
+              <mat-icon>save</mat-icon>
+            </button>
+            <button
+              (click)="pickDir()"
+              mat-icon-button>
+              <mat-icon>drive_folder_upload</mat-icon>
+            </button>
+            <button
+              (click)="resetStates()"
+              mat-icon-button>
+              <mat-icon>undo</mat-icon>
             </button>
             <mat-form-field
               *ngFor="let tier of round.tiers">
               <mat-label>tier {{tier.tier}}</mat-label>
-              <input [(ngModel)]="tier.points" [ngModelOptions]="{standalone: true}" label="weight" matInput>
+              <input
+                [(ngModel)]="tier.points"
+                [ngModelOptions]="{standalone: true}"
+                label="weight"
+                matInput>
             </mat-form-field>
           </form>
         </mat-grid-tile>
@@ -34,13 +54,21 @@
           rowspan="1">
           <form class="editor-form">
             <mat-form-field>
-              <input [(ngModel)]="category.title" [ngModelOptions]="{standalone: true}" label="category" matInput>
+              <input
+                [(ngModel)]="category.title"
+                [ngModelOptions]="{standalone: true}"
+                label="category"
+                matInput>
             </mat-form-field>
             <ng-container
               *ngFor="let question of category.questions">
               <mat-form-field>
                 <mat-label>{{getWeightForQuestion(question)}}</mat-label>
-                <input [(ngModel)]="question.title" [ngModelOptions]="{standalone: true}" label="question" matInput>
+                <input
+                  [(ngModel)]="question.title"
+                  [ngModelOptions]="{standalone: true}"
+                  label="question"
+                  matInput>
               </mat-form-field>
               <button
                 (click)="playQuestion(question)"
@@ -56,17 +84,32 @@
 
   <hr>
 
+  <div *ngFor="let file of getFiles()">
+    <span>{{file.name}}</span>
+    <img [src]="file.url" width=100>
+  </div>
+
+  <hr>
+
   <div
     *ngFor="let player of getGame().players"
     class="host-players">
     <mat-form-field>
       <mat-label>name</mat-label>
-      <input [(ngModel)]="player.name" [ngModelOptions]="{standalone: true}" label="name" matInput>
+      <input
+        [(ngModel)]="player.name"
+        [ngModelOptions]="{standalone: true}"
+        label="name"
+        matInput>
     </mat-form-field>
     <mat-form-field
       class="player-points">
       <mat-label>points</mat-label>
-      <input [(ngModel)]="player.points" [ngModelOptions]="{standalone: true}" label="points" matInput>
+      <input
+        [(ngModel)]="player.points"
+        [ngModelOptions]="{standalone: true}"
+        label="points"
+        matInput>
     </mat-form-field>
   </div>
 
@@ -77,7 +120,20 @@
     class="current-question">
     <mat-form-field appearance="fill">
       <mat-label>{{question.state}}</mat-label>
-      <textarea [(ngModel)]="question.title" matInput rows="3"></textarea>
+      <textarea
+        [(ngModel)]="question.title"
+        matInput
+        rows="3">
+      </textarea>
     </mat-form-field>
+  </div>
+
+  <hr>
+
+  <div class="sound-bar">
+    <span>buzzer</span>
+    <audio controls>
+      <source src="/assets/buzzer.mp3" type="audio/mpeg">
+    </audio>
   </div>
 </div>

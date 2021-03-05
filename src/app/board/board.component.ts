@@ -37,6 +37,10 @@ export class BoardComponent implements OnInit {
     this.zone.run(() => this.game = GameModel.load());
   }
 
+  getCurrentRoundIndex(): number {
+    return this.game.currentRoundIndex;
+  }
+
   getCurrentRound(): RoundModel {
     return this.game.getCurrentRound();
   }

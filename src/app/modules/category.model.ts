@@ -9,11 +9,11 @@ export class CategoryModel {
   constructor(title: string) {
     this.title = title;
     this.questions = [
-      new QuestionModel(1, 'who is'),
-      new QuestionModel(2, 'which has'),
-      new QuestionModel(3, 'what about'),
-      new QuestionModel(4, 'how many'),
-      new QuestionModel(5, 'why not')
+      new QuestionModel(1),
+      new QuestionModel(2),
+      new QuestionModel(3),
+      new QuestionModel(4),
+      new QuestionModel(5)
     ];
   }
 }
