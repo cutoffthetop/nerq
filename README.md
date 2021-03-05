@@ -8,6 +8,6 @@ The app will automatically reload if you change any of the source files.
 
 Run `ng build` to build the project.
 
-The build artifacts will be stored in the `dist/` directory.
+The build artifacts will be stored in the `build/` directory.
 
 Use the `--prod` flag for a production build.
