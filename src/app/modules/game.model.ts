@@ -16,16 +16,14 @@ export class GameModel {
   public constructor(index: number = 0, rounds?: RoundModel[]) {
     this.currentRoundIndex = index;
     this.rounds = rounds || [
-      new RoundModel('main round')
+      new RoundModel('round 1')
     ];
-    this.players = [
-      new PlayerModel('team 1'),
-      new PlayerModel('team 2'),
-      new PlayerModel('team 3'),
-      new PlayerModel('team 4'),
-      new PlayerModel('team 5'),
-      new PlayerModel('team 6')
-    ];
+    this.players = [];
+    for (let player = 0; player < this.players.length; player++) {
+      this.players.push(
+        new PlayerModel(`player ${this.players.length + 1}`)
+      );
+    }
   }
 
   public static load(): GameModel {
@@ -47,8 +45,16 @@ export class GameModel {
     return this.rounds[this.currentRoundIndex];
   }
 
+  public questionsInOrder(): QuestionModel[] {
+    const currentRound = this.getCurrentRound();
+    if (currentRound !== undefined) {
+      return currentRound.questionsInOrder();
+    }
+    return [];
+  }
+
   getCurrentQuestion(): QuestionModel | undefined {
-    return this.rounds[this.currentRoundIndex].questionsInOrder()
+    return this.questionsInOrder()
       .find(
         question =>
           question.state === QuestionState.questioning || question.state === QuestionState.answering
@@ -58,13 +64,7 @@ export class GameModel {
   getCurrentMedia(): MediaModel | undefined {
     const currentQuestion = this.getCurrentQuestion();
     if (currentQuestion !== undefined) {
-      const media = currentQuestion.getMedia();
-      if (media !== undefined) {
-        if (media.endsWith('mp4')) {
-          return new MediaModel('/assets' + media, 'video');
-        }
-        return new MediaModel('/assets' + media, 'image');
-      }
+      return currentQuestion.getMedia();
     }
     return undefined;
   }

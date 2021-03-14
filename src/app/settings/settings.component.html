@@ -1,0 +1,129 @@
+<h1 mat-dialog-title>settings</h1>
+<div mat-dialog-content>
+  <form
+    class="settings-form">
+    <div
+      *ngFor="let round of game.rounds">
+      <mat-form-field
+        class="space-right">
+        <input
+          [(ngModel)]="round.title"
+          [ngModelOptions]="{standalone: true}"
+          label="round"
+          matInput>
+      </mat-form-field>
+      <div
+        class="settings-section space-right">
+        <span>tiers:</span>
+        <button
+          (click)="removeTier(round)"
+          mat-icon-button>
+          <mat-icon>remove_circle_outline</mat-icon>
+        </button>
+        <span>{{round.tiers.length}}</span>
+        <button
+          (click)="addTier(round)"
+          mat-icon-button>
+          <mat-icon>add_circle_outline</mat-icon>
+        </button>
+      </div>
+      <div
+        class="settings-section space-right">
+        <span>categories:</span>
+        <button
+          (click)="removeCategory(round)"
+          mat-icon-button>
+          <mat-icon>remove_circle_outline</mat-icon>
+        </button>
+        <span>{{round.categories.length}}</span>
+        <button
+          (click)="addCategory(round)"
+          mat-icon-button>
+          <mat-icon>add_circle_outline</mat-icon>
+        </button>
+      </div>
+      <div
+        class="settings-section">
+        <button
+          (click)="removeRound(round)"
+          mat-icon-button>
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="space-below">
+      <button
+        (click)="addRound()"
+        mat-stroked-button>
+        add round
+      </button>
+    </div>
+
+    <div
+      *ngFor="let player of game.players">
+      <mat-form-field
+        class="space-right">
+        <input
+          [(ngModel)]="player.name"
+          [ngModelOptions]="{standalone: true}"
+          label="playerName"
+          matInput>
+      </mat-form-field>
+      <mat-form-field
+        class="space-right">
+        <input
+          [(ngModel)]="player.assetUrl"
+          [ngModelOptions]="{standalone: true}"
+          class="space-right"
+          label="playerAssetUrl"
+          matInput
+          placeholder="avatar filename">
+      </mat-form-field>
+      <div
+        class="settings-section">
+        <button
+          (click)="removePlayer(player)"
+          mat-icon-button>
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="space-below">
+      <button
+        (click)="addPlayer()"
+        mat-stroked-button>
+        add player
+      </button>
+    </div>
+
+    <div
+      class="settings-save-wrapper">
+      <input (change)="upload($event)"
+             accept=".json"
+             id="file"
+             type="file">
+      <button
+        (click)="download()"
+        class="space-right"
+        mat-stroked-button>
+        download
+      </button>
+      <button
+        (click)="close()"
+        class="space-right"
+        mat-stroked-button>
+        abort
+      </button>
+      <button
+        (click)="saveGame()"
+        color="primary"
+        mat-stroked-button>
+        save
+      </button>
+    </div>
+  </form>
+</div>

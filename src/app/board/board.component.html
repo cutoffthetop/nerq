@@ -1,4 +1,5 @@
 <mat-grid-list
+  *ngIf="getCurrentRound()"
   [cols]="getCurrentRound().categories.length"
   [rowHeight]="100 / (2 + getCurrentRound().maxQuestions()) + '%'"
   class="board-grid">

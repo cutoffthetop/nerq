@@ -1,7 +1,25 @@
+<h1 class="host-logo">nerq</h1>
+<div class="host-settings">
+  <a
+    href="/board"
+    mat-button
+    target=”_blank”
+    title="open board">
+    <mat-icon>open_in_new</mat-icon>
+  </a>
+  <button
+    (click)="openSettings()"
+    mat-button
+    title="open settings">
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
 <div class="host-wrapper">
   <mat-tab-group
     (selectedTabChange)="changeRoundTab($event)"
+    [selectedIndex]="1"
     class="host-tabs">
+    <mat-tab disabled label=""></mat-tab>
     <mat-tab
       *ngFor="let round of getGame().rounds"
       [label]="round.title">
@@ -20,22 +38,26 @@
                 [value]="'done: ' + doneQuestionsCount()"
                 disabled
                 label="category"
-                matInput>
+                matInput
+                title="number of played questions">
             </mat-form-field>
             <button
-              (click)="saveGame()"
-              mat-icon-button>
-              <mat-icon>save</mat-icon>
-            </button>
-            <button
               (click)="pickDir()"
-              mat-icon-button>
+              mat-icon-button
+              title="choose local asset folder">
               <mat-icon>drive_folder_upload</mat-icon>
             </button>
             <button
               (click)="resetStates()"
-              mat-icon-button>
+              mat-icon-button
+              title="reset pending questions to open">
               <mat-icon>undo</mat-icon>
+            </button>
+            <button
+              (click)="saveGame()"
+              mat-icon-button
+              title="save and sync game">
+              <mat-icon>save</mat-icon>
             </button>
             <mat-form-field
               *ngFor="let tier of round.tiers">
@@ -63,7 +85,7 @@
             <ng-container
               *ngFor="let question of category.questions">
               <mat-form-field>
-                <mat-label>{{getWeightForQuestion(question)}}</mat-label>
+                <mat-label>{{getPointsForQuestion(question)}}</mat-label>
                 <input
                   [(ngModel)]="question.title"
                   [ngModelOptions]="{standalone: true}"
@@ -72,52 +94,63 @@
               </mat-form-field>
               <button
                 (click)="playQuestion(question)"
+                [title]="question.stateTitle()"
                 mat-icon-button>
-                <mat-icon [innerText]="question.stateIcon()">block</mat-icon>
+                <mat-icon
+                  [innerText]="question.stateIcon()">block
+                </mat-icon>
               </button>
             </ng-container>
           </form>
         </mat-grid-tile>
       </mat-grid-list>
     </mat-tab>
+
   </mat-tab-group>
 
-  <hr>
-
-  <div *ngFor="let file of getFiles()">
-    <span>{{file.name}}</span>
-    <img [src]="file.url" width=100>
+  <div
+    *ngIf="getFiles() as files">
+    <hr
+      *ngIf="files.length"
+      class="host-divider">
+    <div *ngFor="let file of files">
+      <span>{{file.name}}</span>
+      <img [src]="file.url" width=100>
+    </div>
   </div>
-
-  <hr>
 
   <div
-    *ngFor="let player of getGame().players"
-    class="host-players">
-    <mat-form-field>
-      <mat-label>name</mat-label>
-      <input
-        [(ngModel)]="player.name"
-        [ngModelOptions]="{standalone: true}"
-        label="name"
-        matInput>
-    </mat-form-field>
-    <mat-form-field
-      class="player-points">
-      <mat-label>points</mat-label>
-      <input
-        [(ngModel)]="player.points"
-        [ngModelOptions]="{standalone: true}"
-        label="points"
-        matInput>
-    </mat-form-field>
+    *ngIf="getGame().players as players">
+    <hr
+      *ngIf="players.length"
+      class="host-divider">
+    <div
+      *ngFor="let player of players"
+      class="host-players">
+      <mat-form-field>
+        <mat-label>name</mat-label>
+        <input
+          [(ngModel)]="player.name"
+          [ngModelOptions]="{standalone: true}"
+          label="name"
+          matInput>
+      </mat-form-field>
+      <mat-form-field
+        class="player-points">
+        <mat-label>points</mat-label>
+        <input
+          [(ngModel)]="player.points"
+          [ngModelOptions]="{standalone: true}"
+          label="points"
+          matInput>
+      </mat-form-field>
+    </div>
   </div>
-
-  <hr>
 
   <div
     *ngIf="getCurrentQuestion() as question"
     class="current-question">
+    <hr class="host-divider">
     <mat-form-field appearance="fill">
       <mat-label>{{question.state}}</mat-label>
       <textarea
@@ -128,12 +161,19 @@
     </mat-form-field>
   </div>
 
-  <hr>
-
-  <div class="sound-bar">
-    <span>buzzer</span>
-    <audio controls>
-      <source src="/assets/buzzer.mp3" type="audio/mpeg">
-    </audio>
+  <div
+    *ngIf="getSoundboard() as medias">
+    <hr
+      *ngIf="medias"
+      class="host-divider">
+    <div
+      *ngFor="let media of medias"
+      class="sound-bar">
+      <span>{{media.url}}</span>
+      <audio controls>
+        <source src="{{media.url}}" type="audio/mpeg">
+      </audio>
+    </div>
   </div>
+
 </div>

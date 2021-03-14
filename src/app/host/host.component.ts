@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {QuestionModel} from '../modules/question.model';
 import {RoundModel} from '../modules/round.model';
@@ -7,6 +7,9 @@ import {GameModel} from '../modules/game.model';
 import {QuestionState} from '../modules/question.state.enum';
 import {from} from 'rxjs';
 import {DomSanitizer} from '@angular/platform-browser';
+import {MatDialog} from '@angular/material/dialog';
+import {SettingsComponent} from '../settings/settings.component';
+import {MediaModel} from '../modules/media.model';
 
 
 @Component({
@@ -21,7 +24,9 @@ export class HostComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    public dialog: MatDialog,
+    private changeDetector: ChangeDetectorRef
   ) {
   }
 
@@ -69,13 +74,26 @@ export class HostComponent implements OnInit {
       );
   }
 
+  openSettings(): void {
+    const dialogRef = this.dialog.open(SettingsComponent, {
+      data: this.game
+    });
+    dialogRef.afterClosed().pipe().subscribe(
+      (value) => {
+        this.game = value;
+        // location.reload();
+      }
+    );
+  }
+
   saveGame(): void {
     this.game = this.getGame().save();
   }
 
   resetStates(): void {
     if (this.game !== undefined) {
-      this.game.getCurrentRound().questionsInOrder()
+      this.game
+        .questionsInOrder()
         .map(
           question => {
             switch (question.state) {
@@ -94,7 +112,8 @@ export class HostComponent implements OnInit {
 
   doneQuestionsCount(): number {
     if (this.game !== undefined) {
-      return this.game.getCurrentRound().questionsInOrder()
+      return this.game
+        .questionsInOrder()
         .filter(
           question => question.state === QuestionState.done
         )
@@ -111,21 +130,35 @@ export class HostComponent implements OnInit {
     return this.getGame().getCurrentQuestion();
   }
 
+  getSoundboard(): MediaModel[] {
+    // @ts-ignore
+    return this.getGame()
+      .questionsInOrder()
+      .map(
+        question => question.getMedia()
+      )
+      .filter(
+        media => media !== undefined && media.type === 'audio'
+      );
+  }
+
   changeRoundTab(event: MatTabChangeEvent): void {
     if (this.game !== undefined) {
       if (this.game.currentRoundIndex !== event.index) {
         this.game.currentRoundIndex = event.index;
-        this.game.save();
       }
     }
   }
 
-  getWeightForQuestion(question: QuestionModel): number {
-    const tier = this.getCurrentRound()
-      .tiers
-      .find(t => t.tier === question.tier);
-    if (tier !== undefined) {
-      return tier.points;
+  getPointsForQuestion(question: QuestionModel): number {
+    const currentRound = this.getCurrentRound();
+    if (currentRound !== undefined) {
+      const tier = currentRound
+        .tiers
+        .find(t => t.tier === question.tier);
+      if (tier !== undefined) {
+        return tier.points;
+      }
     }
     return 0;
   }

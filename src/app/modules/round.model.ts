@@ -12,20 +12,20 @@ export class RoundModel {
 
   constructor(title: string) {
     this.title = title;
-    this.categories = [
-      new CategoryModel('category 1'),
-      new CategoryModel('category 2'),
-      new CategoryModel('category 3'),
-      new CategoryModel('category 4'),
-      new CategoryModel('category 5'),
-      new CategoryModel('category 6')
-    ];
     this.tiers = [
       new TierModel(1, 100),
       new TierModel(2, 200),
       new TierModel(3, 400),
       new TierModel(4, 600),
       new TierModel(5, 1000)
+    ];
+    this.categories = [
+      new CategoryModel('category 1', this.tiers.length),
+      new CategoryModel('category 2', this.tiers.length),
+      new CategoryModel('category 3', this.tiers.length),
+      new CategoryModel('category 4', this.tiers.length),
+      new CategoryModel('category 5', this.tiers.length),
+      new CategoryModel('category 6', this.tiers.length)
     ];
   }
 

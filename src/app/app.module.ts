@@ -14,13 +14,16 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatCardModule} from '@angular/material/card';
+import {SettingsComponent} from './settings/settings.component';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HostComponent,
-    BoardComponent
+    BoardComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -34,10 +37,15 @@ import {MatCardModule} from '@angular/material/card';
     FormsModule,
     ReactiveFormsModule,
     MatTabsModule,
-    MatCardModule
+    MatCardModule,
+    MatDialogModule
   ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}},
+    {
+      provide: MatDialogRef,
+      useValue: {}
+    }
   ],
   bootstrap: [AppComponent]
 })

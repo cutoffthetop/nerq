@@ -1,4 +1,5 @@
 import {QuestionState} from './question.state.enum';
+import {MediaModel} from './media.model';
 
 export class QuestionModel {
   title: string;
@@ -28,16 +29,44 @@ export class QuestionModel {
     }
   }
 
-  getMedia(): string | undefined {
+  stateTitle(): string {
+    switch (this.state) {
+      case QuestionState.open:
+        return 'open (click to play)';
+      case QuestionState.questioning:
+        return 'playing (click for answer)';
+      case QuestionState.answering:
+        return 'answering (click to close)';
+      case QuestionState.done:
+        return 'closed (click to re-open)';
+    }
+  }
+
+  getMedia(): MediaModel | undefined {
     const urls = this.title
       .replace(/\n/g, ' ')
       .split(/[ ,]+/)
       .filter(token => token.startsWith('http') || token.startsWith('/'));
+    let url;
     if (this.state === QuestionState.questioning) {
-      return urls[0];
+      url = urls[0];
     } else if (this.state === QuestionState.answering) {
-      return urls[1];
+      url = urls[1];
     }
-    return undefined;
+    if (url === undefined) {
+      return undefined;
+    }
+    let local = false;
+    if (!url.startsWith('http')) {
+      url = '/assets' + url;
+      local = true;
+    }
+    let type = 'image';
+    if (url.endsWith('mp4')) {
+      type = 'video';
+    } else if (url.endsWith('mp3')) {
+      type = 'audio';
+    }
+    return new MediaModel(url, type, local);
   }
 }

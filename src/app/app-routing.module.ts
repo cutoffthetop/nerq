@@ -1,11 +1,11 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {BoardComponent} from './board/board.component';
-import {AppComponent} from './app.component';
+import {HostComponent} from './host/host.component';
 
 const routes: Routes = [
   {path: 'board', component: BoardComponent},
-  {path: '**', component: AppComponent}
+  {path: '**', component: HostComponent}
 ];
 
 @NgModule({

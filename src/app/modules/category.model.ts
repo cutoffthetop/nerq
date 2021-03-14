@@ -6,14 +6,23 @@ export class CategoryModel {
   @Type(() => QuestionModel)
   questions: QuestionModel[];
 
-  constructor(title: string) {
+  constructor(title: string, tiers: number) {
     this.title = title;
-    this.questions = [
-      new QuestionModel(1),
-      new QuestionModel(2),
-      new QuestionModel(3),
-      new QuestionModel(4),
-      new QuestionModel(5)
-    ];
+    this.questions = [];
+    this.setQuestions(tiers);
+  }
+
+  setQuestions(tiers: number): void {
+    if (this.questions.length > tiers) {
+      this.questions = this.questions.slice(0, tiers);
+
+    } else if (this.questions.length < tiers) {
+      const questionsToAdd = tiers - this.questions.length;
+      for (let tier = 0; tier < questionsToAdd; tier++) {
+        this.questions.push(
+          new QuestionModel(this.questions.length + 1)
+        );
+      }
+    }
   }
 }
