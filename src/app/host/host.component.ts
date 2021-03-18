@@ -21,6 +21,7 @@ export class HostComponent implements OnInit {
 
   private game?: GameModel;
   private files: { name: string, url: string, file: File }[] = [];
+  private focusedQuestion?: QuestionModel = undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -81,7 +82,6 @@ export class HostComponent implements OnInit {
     dialogRef.afterClosed().pipe().subscribe(
       (value) => {
         this.game = value;
-        // location.reload();
       }
     );
   }
@@ -127,7 +127,7 @@ export class HostComponent implements OnInit {
   }
 
   getCurrentQuestion(): QuestionModel | undefined {
-    return this.getGame().getCurrentQuestion();
+    return this.focusedQuestion || this.getGame().getCurrentQuestion();
   }
 
   getSoundboard(): MediaModel[] {
@@ -144,10 +144,15 @@ export class HostComponent implements OnInit {
 
   changeRoundTab(event: MatTabChangeEvent): void {
     if (this.game !== undefined) {
-      if (this.game.currentRoundIndex !== event.index) {
-        this.game.currentRoundIndex = event.index;
+      if (this.game.currentRoundIndex !== event.index - 1) {
+        this.game.currentRoundIndex = event.index - 1;
+        this.game.save();
       }
     }
+  }
+
+  focusQuestion(question: QuestionModel): void {
+    this.focusedQuestion = question;
   }
 
   getPointsForQuestion(question: QuestionModel): number {
@@ -179,6 +184,7 @@ export class HostComponent implements OnInit {
           question.state = QuestionState.open;
           break;
       }
+      this.focusedQuestion = question;
       this.game.save();
     }
   }

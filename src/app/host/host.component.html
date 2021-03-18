@@ -89,6 +89,7 @@
                 <input
                   [(ngModel)]="question.title"
                   [ngModelOptions]="{standalone: true}"
+                  (focusin)="focusQuestion(question)"
                   label="question"
                   matInput>
               </mat-form-field>
@@ -127,17 +128,9 @@
     <div
       *ngFor="let player of players"
       class="host-players">
-      <mat-form-field>
-        <mat-label>name</mat-label>
-        <input
-          [(ngModel)]="player.name"
-          [ngModelOptions]="{standalone: true}"
-          label="name"
-          matInput>
-      </mat-form-field>
       <mat-form-field
         class="player-points">
-        <mat-label>points</mat-label>
+        <mat-label>{{player.name}}</mat-label>
         <input
           [(ngModel)]="player.points"
           [ngModelOptions]="{standalone: true}"
@@ -152,7 +145,7 @@
     class="current-question">
     <hr class="host-divider">
     <mat-form-field appearance="fill">
-      <mat-label>{{question.state}}</mat-label>
+      <mat-label>{{getPointsForQuestion(question)}}</mat-label>
       <textarea
         [(ngModel)]="question.title"
         matInput
