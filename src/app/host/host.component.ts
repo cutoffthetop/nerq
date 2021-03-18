@@ -49,10 +49,6 @@ export class HostComponent implements OnInit {
     return this.assetManager;
   }
 
-  resolveURL(url: string): MediaModel | undefined {
-    return this.getAssetManager().resolveURL(url);
-  }
-
   sanitize(url: string): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
@@ -73,7 +69,7 @@ export class HostComponent implements OnInit {
           let type = 'image';
           if (file.type === 'video/mp4') {
             type = 'video';
-          } else if (file.type === 'audio/mp3') {
+          } else if (file.type.startsWith('audio')) {
             type = 'audio';
           } else if (!file.type.startsWith('image')) {
             continue;
@@ -153,22 +149,21 @@ export class HostComponent implements OnInit {
 
   getSoundboard(): MediaModel[] {
     // @ts-ignore
-    return this.getGame()
+    const remoteAudio = this.getGame()
       .questionsInOrder()
       .map(
         question => this.getAssetManager().resolveURL(question.getURL())
       )
       .filter(
-        media => media !== undefined && media.type === 'audio' && !media.local
-      ).concat(
-        this.getAssetManager().medias
-        .filter(
-          media => media.type === 'audio' && media.local
-        )
-      )
-      .filter(
-        media => media !== undefined
+        media => media !== undefined && !media.local && media.type === 'audio'
       );
+    const localAudio = this.getAssetManager().medias
+      .filter(
+        media => media !== undefined && media.local && media.type === 'audio'
+      );
+
+    // @ts-ignore
+    return remoteAudio.concat(localAudio);
   }
 
   changeRoundTab(event: MatTabChangeEvent): void {

@@ -138,9 +138,29 @@
       <textarea
         [(ngModel)]="question.title"
         matInput
-        rows="3">
+        rows="5">
       </textarea>
     </mat-form-field>
+    <div
+      *ngFor="let url of question.getURLs()"
+      class="host-media">
+      <span
+        *ngIf="getAssetManager().resolveURL(url) as media">
+        <img
+          *ngIf="media.type === 'image'"
+          [src]="sanitize(media.url)"
+          width="200">
+        <video
+          *ngIf="media.type === 'video'"
+          muted
+          controls
+          width="200">
+          <source
+            [src]="sanitize(media.url)" type="video/mp4">
+        </video>
+      </span>
+    </div>
+
   </div>
 
   <div
@@ -151,9 +171,9 @@
     <div
       *ngFor="let media of medias"
       class="sound-bar">
-      <span>{{media.url}}</span>
+      <span>{{media.name}}</span>
       <audio controls>
-        <source src="{{media.url}}" type="audio/mpeg">
+        <source [src]="sanitize(media.url)" type="audio/mpeg">
       </audio>
     </div>
   </div>

@@ -44,7 +44,15 @@
 }
 
 .current-question > .mat-form-field {
-  width: 100%;
+  width: 60%;
+}
+
+.host-media {
+  display: inline-block;
+  max-height: 120px;
+  margin-left: 10px;
+  overflow: hidden;
+  vertical-align: top;
 }
 
 .player-points {

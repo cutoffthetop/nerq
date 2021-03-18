@@ -39,6 +39,7 @@ export class AssetManagerModel {
       local = true;
     }
     let type = 'image';
+
     if (url.endsWith('mp4')) {
       type = 'video';
     } else if (url.endsWith('mp3')) {

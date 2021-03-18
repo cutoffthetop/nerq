@@ -42,11 +42,15 @@ export class QuestionModel {
     }
   }
 
-  getURL(): string | undefined {
-    const urls = this.title
+  getURLs(): (string | undefined)[] {
+    return this.title
       .replace(/\n/g, ' ')
       .split(/[ ,]+/)
       .filter(token => token.startsWith('http') || token.startsWith('/'));
+  }
+
+  getURL(): string | undefined {
+    const urls = this.getURLs();
     let url;
     if (this.state === QuestionState.questioning) {
       url = urls[0];
