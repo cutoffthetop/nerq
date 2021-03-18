@@ -6,6 +6,7 @@ import {GameModel} from '../modules/game.model';
 import {PlayerModel} from '../modules/player.model';
 import {fromEvent, Observable} from 'rxjs';
 import {MediaModel} from '../modules/media.model';
+import {QuestionModel} from '../modules/question.model';
 
 @Component({
   selector: 'app-board',
@@ -47,6 +48,13 @@ export class BoardComponent implements OnInit {
 
   getCurrentMedia(): MediaModel | undefined {
     return this.game.getCurrentMedia();
+  }
+
+  getQuestionOddEven(index: number): string {
+    if (Math.floor(index / this.getCurrentRound().categories.length) % 2 === 0) {
+      return 'even';
+    }
+    return 'odd';
   }
 
   getPlayers(): PlayerModel[] {

@@ -11,8 +11,8 @@
     {{category.title}}
   </mat-grid-tile>
   <mat-grid-tile
-    *ngFor="let question of getCurrentRound().questionsInOrder()"
-    [class]="'board-tile board-tile-' + question.stateString()"
+    *ngFor="let question of getCurrentRound().questionsInOrder(); let i = index"
+    [class]="'board-tile board-tile-' + question.stateString() + ' board-tile-' + getQuestionOddEven(i)"
     colspan="1"
     rowspan="1">
     {{getCurrentRound().getPointsForTier(question.tier)}}
@@ -25,8 +25,8 @@
         *ngFor="let player of getPlayers()"
         class="player-chip">
         <div
-          *ngIf="getCurrentRoundIndex() > 0"
-          [style]="'background-image: url(\'/assets/player-' + (getPlayers().indexOf(player) + 1).toString() + '.jpg\')'"
+          *ngIf="player.assetUrl"
+          [style]="'background-image: url(\'' + player.assetUrl + '\')'"
           class="player-avatar">
         </div>
         <span

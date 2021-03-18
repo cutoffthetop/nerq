@@ -23,6 +23,10 @@
   font-size: xxx-large;
 }
 
+.board-tile-even {
+  filter: brightness(125%);
+}
+
 .board-tile-done {
   background-color: #07038C;
   color: #0439D9;
