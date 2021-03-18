@@ -42,10 +42,10 @@
                 title="number of played questions">
             </mat-form-field>
             <button
-              (click)="pickDir()"
+              (click)="pickFiles()"
               mat-icon-button
-              title="choose local asset folder">
-              <mat-icon>drive_folder_upload</mat-icon>
+              [title]="hasFiles() ? 'asset folder connected': 'choose asset folder'">
+              <mat-icon>{{hasFiles() ? 'snippet_folder' : 'create_new_folder'}}</mat-icon>
             </button>
             <button
               (click)="resetStates()"
@@ -108,17 +108,6 @@
     </mat-tab>
 
   </mat-tab-group>
-
-  <div
-    *ngIf="getFiles() as files">
-    <hr
-      *ngIf="files.length"
-      class="host-divider">
-    <div *ngFor="let file of files">
-      <span>{{file.name}}</span>
-      <img [src]="file.url" width=100>
-    </div>
-  </div>
 
   <div
     *ngIf="getGame().players as players">

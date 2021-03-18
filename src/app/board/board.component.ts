@@ -7,6 +7,8 @@ import {PlayerModel} from '../modules/player.model';
 import {fromEvent, Observable} from 'rxjs';
 import {MediaModel} from '../modules/media.model';
 import {QuestionModel} from '../modules/question.model';
+import {AssetManagerModel} from '../modules/asset.manager.model';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-board',
@@ -22,6 +24,7 @@ export class BoardComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private sanitizer: DomSanitizer,
     public zone: NgZone
   ) {
     // @ts-ignore
@@ -38,6 +41,10 @@ export class BoardComponent implements OnInit {
     this.zone.run(() => this.game = GameModel.load());
   }
 
+  getAssetManager(): AssetManagerModel {
+    return AssetManagerModel.load();
+  }
+
   getCurrentRoundIndex(): number {
     return this.game.currentRoundIndex;
   }
@@ -47,7 +54,15 @@ export class BoardComponent implements OnInit {
   }
 
   getCurrentMedia(): MediaModel | undefined {
-    return this.game.getCurrentMedia();
+    const currentQuestion = this.game.getCurrentQuestion();
+    if (currentQuestion !== undefined) {
+      return this.getAssetManager().resolveURL(currentQuestion.getURL());
+    }
+    return undefined;
+  }
+
+  sanitize(url: string): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   getQuestionOddEven(index: number): string {

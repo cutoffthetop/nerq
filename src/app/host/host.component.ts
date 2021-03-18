@@ -6,10 +6,11 @@ import {MatTabChangeEvent} from '@angular/material/tabs';
 import {GameModel} from '../modules/game.model';
 import {QuestionState} from '../modules/question.state.enum';
 import {from} from 'rxjs';
-import {DomSanitizer} from '@angular/platform-browser';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {MatDialog} from '@angular/material/dialog';
 import {SettingsComponent} from '../settings/settings.component';
 import {MediaModel} from '../modules/media.model';
+import {AssetManagerModel} from '../modules/asset.manager.model';
 
 
 @Component({
@@ -20,8 +21,8 @@ import {MediaModel} from '../modules/media.model';
 export class HostComponent implements OnInit {
 
   private game?: GameModel;
-  private files: { name: string, url: string, file: File }[] = [];
-  private focusedQuestion?: QuestionModel = undefined;
+  private assetManager?: AssetManagerModel;
+  private focusedQuestion?: QuestionModel;
 
   constructor(
     private route: ActivatedRoute,
@@ -41,36 +42,56 @@ export class HostComponent implements OnInit {
     return this.game;
   }
 
-  getFiles(): { name: string, url: string, file: File }[] {
-    return this.files;
+  getAssetManager(): AssetManagerModel {
+    if (this.assetManager === undefined) {
+      this.assetManager = (new AssetManagerModel([])).save();
+    }
+    return this.assetManager;
   }
 
-  pickDir(): void {
+  resolveURL(url: string): MediaModel | undefined {
+    return this.getAssetManager().resolveURL(url);
+  }
+
+  sanitize(url: string): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  hasFiles(): boolean {
+    return this.getAssetManager().hasMedia();
+  }
+
+  pickFiles(): void {
     // @ts-ignore
     const entries = async () => {
       // @ts-ignore
       const dirHandle = await window.showDirectoryPicker();
-      const files = [];
+      const medias: MediaModel[] = [];
       for await (const entry of dirHandle.values()) {
         if (entry.kind === 'file') {
           const file: File = await entry.getFile();
-          files.push({
-            name: entry.name,
-            url: this.sanitizer.bypassSecurityTrustResourceUrl(
-              URL.createObjectURL(file)
-            ),
-            file
-          });
+          let type = 'image';
+          if (file.type === 'video/mp4') {
+            type = 'video';
+          } else if (file.type === 'audio/mp3') {
+            type = 'audio';
+          } else if (!file.type.startsWith('image')) {
+            continue;
+          }
+          const url = URL.createObjectURL(file);
+          medias.push(
+            new MediaModel(entry.name, url, type, true)
+          );
         }
       }
-      return files;
+      return medias;
     };
 
     from(entries())
       .subscribe(
         // @ts-ignore
-        (files: { name: string, url: string, file: File }[]) => {
-          this.files = files;
+        (medias: MediaModel[]) => {
+          this.assetManager = (new AssetManagerModel(medias)).save();
         }
       );
   }
@@ -135,10 +156,18 @@ export class HostComponent implements OnInit {
     return this.getGame()
       .questionsInOrder()
       .map(
-        question => question.getMedia()
+        question => this.getAssetManager().resolveURL(question.getURL())
       )
       .filter(
-        media => media !== undefined && media.type === 'audio'
+        media => media !== undefined && media.type === 'audio' && !media.local
+      ).concat(
+        this.getAssetManager().medias
+        .filter(
+          media => media.type === 'audio' && media.local
+        )
+      )
+      .filter(
+        media => media !== undefined
       );
   }
 

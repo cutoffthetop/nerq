@@ -45,12 +45,12 @@
     class="popup-card">
     <img
       *ngIf="media.type === 'image'"
-      [src]="media.url">
+      [src]="sanitize(media.url)">
     <video
       *ngIf="media.type === 'video'"
       autoplay>
       <source
-        [src]="media.url" type="video/mp4">
+        [src]="sanitize(media.url)" type="video/mp4">
     </video>
   </div>
 </div>

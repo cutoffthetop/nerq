@@ -42,7 +42,7 @@ export class QuestionModel {
     }
   }
 
-  getMedia(): MediaModel | undefined {
+  getURL(): string | undefined {
     const urls = this.title
       .replace(/\n/g, ' ')
       .split(/[ ,]+/)
@@ -53,20 +53,6 @@ export class QuestionModel {
     } else if (this.state === QuestionState.answering) {
       url = urls[1];
     }
-    if (url === undefined) {
-      return undefined;
-    }
-    let local = false;
-    if (!url.startsWith('http')) {
-      url = '/assets' + url;
-      local = true;
-    }
-    let type = 'image';
-    if (url.endsWith('mp4')) {
-      type = 'video';
-    } else if (url.endsWith('mp3')) {
-      type = 'audio';
-    }
-    return new MediaModel(url, type, local);
+    return url;
   }
 }

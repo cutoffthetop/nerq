@@ -3,10 +3,6 @@
   margin: 10px 20px 0px;
 }
 
-.board-grid {
-  cursor: pointer;
-}
-
 .board-header {
   font-size: x-large;
   text-transform: uppercase;
@@ -16,6 +12,7 @@
 
 .board-header, .board-tile {
   box-shadow: inset 2px 2px 0 #0439D9;
+  user-select: none;
 }
 
 .board-tile {
@@ -38,6 +35,7 @@
   color: #F9F9F9;
   border-radius: 20px;
   padding: 20px 3px 20px 0;
+  user-select: none;
 }
 
 .player-avatar {

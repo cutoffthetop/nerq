@@ -27,17 +27,17 @@ export class GameModel {
   }
 
   public static load(): GameModel {
-    const gameJSON = localStorage.getItem(GameModel.storageKey);
-    if (gameJSON) {
-      return deserialize(GameModel, gameJSON);
+    const rawJSON = localStorage.getItem(GameModel.storageKey);
+    if (rawJSON) {
+      return deserialize(GameModel, rawJSON);
     } else {
       return (new GameModel()).save();
     }
   }
 
   public save(): GameModel {
-    const gameJSON = serialize(this);
-    localStorage.setItem(GameModel.storageKey, gameJSON);
+    const rawJSON = serialize(this);
+    localStorage.setItem(GameModel.storageKey, rawJSON);
     return this;
   }
 
@@ -59,13 +59,5 @@ export class GameModel {
         question =>
           question.state === QuestionState.questioning || question.state === QuestionState.answering
       );
-  }
-
-  getCurrentMedia(): MediaModel | undefined {
-    const currentQuestion = this.getCurrentQuestion();
-    if (currentQuestion !== undefined) {
-      return currentQuestion.getMedia();
-    }
-    return undefined;
   }
 }
