@@ -25,8 +25,8 @@
         *ngFor="let player of getPlayers()"
         class="player-chip">
         <div
-          *ngIf="player.assetUrl"
-          [style]="'background-image: url(\'' + player.assetUrl + '\')'"
+          *ngIf="getPlayerAvatar(player) as avatarURL"
+          [style]="sanitize('background-image: url(\'' + avatarURL + '\')')"
           class="player-avatar">
         </div>
         <span

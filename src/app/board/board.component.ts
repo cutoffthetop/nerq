@@ -61,6 +61,14 @@ export class BoardComponent implements OnInit {
     return undefined;
   }
 
+  getPlayerAvatar(player: PlayerModel): string | undefined {
+    const avatar = this.getAssetManager().resolveURL(player.assetUrl);
+    if (avatar !== undefined) {
+      return avatar.url;
+    }
+    return undefined;
+  }
+
   sanitize(url: string): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
